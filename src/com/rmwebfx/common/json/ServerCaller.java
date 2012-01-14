@@ -1,10 +1,18 @@
 package com.rmwebfx.common.json;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -14,28 +22,51 @@ public class ServerCaller implements Runnable {
 	private IServerRequestor activity;
 	private String method;
 	
-	public ServerCaller(IServerRequestor activity, URL url, String method) {
+	public ServerCaller(IServerRequestor activity, URL url) {
 		this.url = url;
 		this.activity = activity;
-		this.method = method;
 	}
 	
 	@Override
 	public void run() {
-		String jsonResponse = null;
+		String jsonResponse = doRestGet().trim();
+		JSONObject json = null;
 		
-		Log.d("BUG",method.toLowerCase());
-		doRestGet();
+		try {
+			json = new JSONObject(jsonResponse);
+			activity.handleServerResponse(json); // delegates to the calling activity
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	private String doRestGet() {
-		Client client = new Client();
-		WebResource resource = client.resource(url.toString());
+	public String doRestGet(){  
+        URI uri = null;
+        String response = null;
+        
+		try {
+			uri = new URI(url.toString());
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		String response = resource.get(String.class);
-		Log.d("Response", response);
-		
-		return "";
-	}
+		HttpClient httpClient = new DefaultHttpClient();  
+        HttpGet request = new HttpGet(uri);  
+        ResponseHandler<String> handler = new BasicResponseHandler();  
+        
+        try {  
+            response = httpClient.execute(request, handler);  
+        } catch (ClientProtocolException e) {  
+            e.printStackTrace();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }  
+        
+        httpClient.getConnectionManager().shutdown();
+        
+        return response;
+    }
 	
 }
