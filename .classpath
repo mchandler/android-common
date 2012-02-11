@@ -4,8 +4,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="/Users/mchandler/projects/androidprojects/android-common/artifacts/jersey-client-1.11.jar"/>
-	<classpathentry kind="lib" path="/Users/mchandler/projects/androidprojects/android-common/artifacts/jersey-core-1.11.jar"/>
-	<classpathentry kind="lib" path="/Users/mchandler/projects/androidprojects/android-common/artifacts/resting-0.7-dev-release-android.jar"/>
+	<classpathentry kind="lib" path="/Users/mchandler/projects/androidprojects/android-common/artifacts/GoogleAdMobAdsSdk-4.3.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
